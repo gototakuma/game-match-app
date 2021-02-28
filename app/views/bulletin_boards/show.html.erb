@@ -1,0 +1,61 @@
+<h2><%= @bulletin_board.title %></h2>
+<h4><%= @bulletin_board.description %></h4>
+
+<hr />
+
+<h2>投稿する</h2>
+<%= form_with model: @message_post, url: message_post_create_path(@bulletin_board.id), method: :post, local: true do |f| %>
+  <div class='row'>
+    <div class='col-md'>
+      <%= f.label :name %>
+      <%= f.text_field :name, class: 'form-control' %>
+    </div>
+    <div class='col-md'>
+      <%= f.label :gender %>
+      <%= f.select :gender, {'男性': 1, '女性': 2}, { include_blank: '選択してください'}, { class: 'form-control' , required: true }%>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col-md'>
+      <%= f.label :game_id%>
+      <%= f.text_field :game_id, class: 'form-control' %>
+    </div>
+    <div class='col-md'>
+      <%= f.label :purpose %>
+      <%= f.select :purpose, {'フレンド': 1, '協力プレイ': 2, 'その他': 3}, { include_blank: '選択してください'}, { class: 'form-control' , required: true }%>
+    </div>
+  </div>
+  <%= f.label :message %>
+  <%= f.text_area :message, rows: 5, class: 'form-control' %>
+  <%= f.hidden_field :bulletin_board_id, value: @bulletin_board.id%>
+  <br />
+  <%= f.submit '投稿', class: 'btn btn-primary' %>
+<% end %>
+
+<hr />
+
+<h2>投稿一覧</h2>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">投稿者</th>
+      <th scope="col">ゲームID</th>
+      <th scope="col">投稿日時</th>
+      <th scope="col">メッセージ</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @message_posts.each do |post| %>
+      <tr>
+        <td>
+          <%= post.name %>
+          <%= post.gender %>
+          <%= post.purpose %>
+        </td>
+        <td><%= post.game_id %></td>
+        <td><%= I18n.l(post.created_at, format: :short) %></td>
+        <td><%= post.message %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
